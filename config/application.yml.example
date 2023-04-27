@@ -1,0 +1,13 @@
+development:
+  DB_HOST: '127.0.0.1'
+  DB_PORT: '3310'
+  DB_USERNAME: 'dev_db_user'
+  DB_PASSWORD: 'password'
+  DB_NAME: 'dev_db'
+
+test:
+  DB_HOST: '127.0.0.1'
+  DB_PORT: '3311'
+  DB_USERNAME: 'test_db_user'
+  DB_PASSWORD: 'password'
+  DB_NAME: 'test_db'
