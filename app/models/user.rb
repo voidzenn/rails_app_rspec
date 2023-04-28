@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  belongs_to :role
+
   validates :fname, presence: true, length: { minimum: 3, maximum: 50 }
   validates :lname, presence: true, length: { minimum: 3, maximum: 50 }
   validates :age, presence: false,
