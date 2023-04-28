@@ -43,6 +43,6 @@ RSpec.describe User, type: :model do
   end
 
   describe "User associations" do
-    it { is_expected.to belong_to(:role).class_name("Role") }
+    it { is_expected.to belong_to(:role).class_name("Role").with_foreign_key(:role_id) }
   end
 end

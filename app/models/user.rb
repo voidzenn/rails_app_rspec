@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  belongs_to :role
+  belongs_to :role, foreign_key: :role_id
 
   validates :fname, presence: true, length: { minimum: 3, maximum: 50 }
   validates :lname, presence: true, length: { minimum: 3, maximum: 50 }
