@@ -1,5 +1,4 @@
 # TDD Practice with RSpec
-## Specs for model validations
 
 ### Pre-requisites
  - After pulling repo, run **bundle install**
@@ -7,8 +6,18 @@
  - You need to install docker, after installing docker, run mysql docker containers using this command **docker-compose up -d**
  - Run migration **rails db:migrate**
  
-### Run test specs
-#### Test User model validations by running this command
+## Model Specs
+#### Test User model validations
  ~~~ 
  rspec spec/models/user_spec.rb
+ ~~~
+#### Test Role model validations
+ ~~~ 
+ rspec spec/models/role_spec.rb
+ ~~~
+ ## Controller Specs
+ 
+#### Test Roles Controller
+  ~~~ 
+ rspec spec/controllers/api/v1/roles_controller_spec.rb
  ~~~
