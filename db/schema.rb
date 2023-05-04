@@ -26,12 +26,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_28_055751) do
     t.string "password"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "users_id", null: false
     t.bigint "role_id"
     t.index ["role_id"], name: "index_users_on_role_id"
-    t.index ["users_id"], name: "index_users_on_users_id"
   end
 
   add_foreign_key "users", "roles"
-  add_foreign_key "users", "users", column: "users_id"
 end
