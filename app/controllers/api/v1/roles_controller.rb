@@ -2,7 +2,7 @@ class Api::V1::RolesController < Api::BaseController
   before_action :find_by_id, only: %i(show update destroy)
 
   def index
-    role = Role.all
+    role ||= Role.all
 
     return render json: { message: "Failed" }, status: 400 if role.empty?
 
@@ -16,7 +16,7 @@ class Api::V1::RolesController < Api::BaseController
   end
 
   def create
-    role = Role.new role_params
+    role ||= Role.new role_params
 
     return render json: { message: "Failed" }, status: 400 if !role.valid?
 
@@ -40,7 +40,7 @@ class Api::V1::RolesController < Api::BaseController
   end
 
   def find_by_id
-    @role = Role.find params[:id]
+    @role ||= Role.find params[:id]
 
     return render json: { message: "Failed role not found" }, status: 400 if !@role
   end
