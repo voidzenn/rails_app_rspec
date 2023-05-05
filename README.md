@@ -21,3 +21,7 @@
   ~~~ 
  rspec spec/controllers/api/v1/roles_controller_spec.rb
  ~~~
+#### Test Users Controller
+  ~~~ 
+ rspec spec/controllers/api/v1/users_controller_spec.rb
+ ~~~
