@@ -10,8 +10,6 @@ class Api::V1::RolesController < Api::BaseController
   end
 
   def show
-    return render json: { message: "Failed" }, status: 400 if !@role
-
     render json: { message: "Success", data: @role }, status: 200
   end
 
