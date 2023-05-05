@@ -4,8 +4,6 @@ class Api::V1::RolesController < Api::BaseController
   def index
     role ||= Role.all
 
-    return render json: { message: "Failed" }, status: 400 if role.empty?
-
     render json: { message: "Success", data: role }, status: 200
   end
 
@@ -16,20 +14,26 @@ class Api::V1::RolesController < Api::BaseController
   def create
     role ||= Role.new role_params
 
-    return render json: { message: "Failed" }, status: 400 if !role.valid?
-
-    role.save
-    render json: { message: "Successfully created #{params[:name]}", data: role }, status: 200
+    if role.valid? and role.save
+      render json: { message: "Successfully created #{params[:name]}", data: role }, status: 200
+    else
+      invalid_message role
+    end
   end
 
   def update
-    @role.update role_params
-    render json: { message: "Success" }, status: 200
+    if @role.valid? and @role.update role_params
+      render json: { message: "Success" }, status: 200
+    else
+      invalid_message @role
+    end
   end
 
   def destroy
-    @role.delete
-    render json: { message: "Success" }, status: 200
+    return render json: { message: "Success" }, status: 200 if @role.delete
+
+    rescue ActiveRecord::InvalidForeignKey => e
+          render json: { message: "Cannot delete role", error_message: e }, status: 422
   end
 
   private
@@ -40,6 +44,11 @@ class Api::V1::RolesController < Api::BaseController
   def find_by_id
     @role ||= Role.find params[:id]
 
-    return render json: { message: "Failed role not found" }, status: 400 if !@role
+    rescue ActiveRecord::RecordNotFound => e
+          render json: { message: "Failed role not found", error_message: e }, status: 404
+  end
+
+  def invalid_message data
+    render json: { error_message: data.errors.full_messages }, status: 400
   end
 end
