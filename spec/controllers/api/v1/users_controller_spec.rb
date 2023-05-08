@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::UsersController, type: :controller do
-  let(:role) { Role.create(name: 'Admin') }
+  let(:role) { FactoryBot.create(:role) }
+  let(:user) { FactoryBot.create(:user) }
   let(:valid_params) do
     {
       fname: "new user",
@@ -9,8 +10,6 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       role_id: role.id
     }
   end
-  let(:user) { User.create valid_params }
-
 
   describe "POST #create" do
     context "When user create failed" do
