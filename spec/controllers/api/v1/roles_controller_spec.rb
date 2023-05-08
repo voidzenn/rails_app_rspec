@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::RolesController, type: :controller  do
-  let(:role) { Role.create(name: 'Admin') }
+  let(:role) { FactoryBot.create(:role) }
   let(:valid_params) { { name: "Member" } }
 
   describe "POST #create" do
