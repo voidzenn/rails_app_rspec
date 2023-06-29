@@ -45,9 +45,8 @@ class Api::V1::UsersController < Api::BaseController
 
   def find_by_id
     @user ||= User.find params[:id]
-
-    rescue ActiveRecord::RecordNotFound => e
-          render json: { message: "Failed user not found", error_message: e }, status: 404
+  rescue ActiveRecord::RecordNotFound => e
+        render json: { message: "Failed user not found", error_message: e }, status: 404
   end
 
   def invalid_message data

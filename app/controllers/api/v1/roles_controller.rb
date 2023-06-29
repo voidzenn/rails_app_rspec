@@ -31,9 +31,8 @@ class Api::V1::RolesController < Api::BaseController
 
   def destroy
     return render json: { message: "Success" }, status: 200 if @role.delete
-
-    rescue ActiveRecord::InvalidForeignKey => e
-          render json: { message: "Cannot delete role", error_message: e }, status: 422
+  rescue ActiveRecord::InvalidForeignKey => e
+        render json: { message: "Cannot delete role", error_message: e }, status: 422
   end
 
   private
@@ -43,9 +42,8 @@ class Api::V1::RolesController < Api::BaseController
 
   def find_by_id
     @role ||= Role.find params[:id]
-
-    rescue ActiveRecord::RecordNotFound => e
-          render json: { message: "Failed role not found", error_message: e }, status: 404
+  rescue ActiveRecord::RecordNotFound => e
+        render json: { message: "Failed role not found", error_message: e }, status: 404
   end
 
   def invalid_message data
