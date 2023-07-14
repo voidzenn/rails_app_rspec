@@ -7,21 +7,29 @@
  - Run migration **rails db:migrate**
  
 ## Model Specs
-#### Test User model validations
- ~~~ 
+#### User
+ ~~~ ruby
  rspec spec/models/user_spec.rb
  ~~~
-#### Test Role model validations
- ~~~ 
+#### Role
+ ~~~ ruby
  rspec spec/models/role_spec.rb
+ ~~~
+#### Post
+ ~~~ ruby
+ rspec spec/models/post_spec.rb
  ~~~
  ## Controller Specs
  
-#### Test Roles Controller
-  ~~~ 
+#### Roles
+  ~~~ ruby 
  rspec spec/controllers/api/v1/roles_controller_spec.rb
  ~~~
-#### Test Users Controller
-  ~~~ 
+#### Users
+  ~~~ ruby 
  rspec spec/controllers/api/v1/users_controller_spec.rb
+ ~~~
+#### Posts
+  ~~~ ruby 
+ rspec spec/controllers/api/v1/posts_controller_spec.rb
  ~~~
