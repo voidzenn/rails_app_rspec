@@ -12,16 +12,16 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   end
 
   describe "POST #create" do
+    let(:short_characters) {"ab"}
+
     context "When user create failed" do
       context "When :fname field too short" do
         let(:invalid_params) do
-          !valid_params[:fname] = "ab"
+          !valid_params[:fname] = short_characters
           valid_params
         end
 
-        before do
-          post :create, params: { user: invalid_params }
-        end
+        before {post :create, params: {user: invalid_params}}
 
         it "return 400" do
           expect(response).to have_http_status(400)
@@ -30,13 +30,11 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
       context "When :lname field too short" do
         let(:invalid_params) do
-          !valid_params[:lname] = "ab"
+          !valid_params[:lname] = short_characters
           valid_params
         end
 
-        before do
-          post :create, params: { user: invalid_params }
-        end
+        before {post :create, params: {user: invalid_params}}
 
         it "return 400" do
           expect(response).to have_http_status(400)
@@ -49,9 +47,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
           valid_params
         end
 
-        before do
-          post :create, params: { user: invalid_params }
-        end
+        before {post :create, params: {user: invalid_params}}
 
         it "return 400" do
           expect(response).to have_http_status(400)
@@ -59,11 +55,9 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       end
 
       context "When missing :fname field" do
-        let(:invalid_params) { valid_params.except(:fname) }
+        let(:invalid_params) {valid_params.except(:fname)}
 
-        before do
-          post :create, params: { user: invalid_params }
-        end
+        before {post :create, params: {user: invalid_params}}
 
         it "return 400" do
           expect(response).to have_http_status(400)
@@ -71,11 +65,9 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       end
 
       context "When missing :lname field" do
-        let(:invalid_params) { valid_params.except(:lname) }
+        let(:invalid_params) {valid_params.except(:lname)}
 
-        before do
-          post :create, params: { user: invalid_params }
-        end
+        before {post :create, params: {user: invalid_params}}
 
         it "return 400" do
           expect(response).to have_http_status(400)
@@ -83,11 +75,9 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       end
 
       context "When missing :role_id field" do
-        let(:invalid_params) { valid_params.except(:role_id) }
+        let(:invalid_params) {valid_params.except(:role_id)}
 
-        before do
-          post :create, params: { user: invalid_params }
-        end
+        before {post :create, params: {user: invalid_params}}
 
         it "return 400" do
           expect(response).to have_http_status(400)
@@ -96,7 +86,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     end
 
     context "When user create successfully" do
-      before { post :create, params: { user: valid_params } }
+      before {post :create, params: {user: valid_params}}
 
       it "return success with valid params" do
         expect(response).to have_http_status(200)
@@ -121,7 +111,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     context "When user not found" do
       before do
         allow(User).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
-        get :show, params: { id: 0 }
+        get :show, params: {id: 0}
       end
 
       it "return 404" do
@@ -130,9 +120,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     end
 
     context "When user retrieved successfully" do
-      before do
-        get :index, params: { id: user.id }
-      end
+      before {get :index, params: {id: user.id}}
 
       it "return 200" do
         expect(response).to have_http_status(200)
@@ -141,10 +129,12 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   end
 
   describe "PUT #update" do
+    let(:short_characters) {"ab"}
+
     context "When user not found" do
       before do
         allow(User).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
-        get :show, params: { id: 0 }
+        get :show, params: {id: 0}
       end
 
       it "return 404" do
@@ -156,13 +146,11 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       context "When user validations failed" do
         context "When :fname too short" do
           let(:invalid_params) do
-            !valid_params[:fname] = "ab"
+            !valid_params[:fname] = short_characters
             valid_params
           end
 
-          before do
-            put :update, params: { id: user.id, user: invalid_params }
-          end
+          before {put :update, params: {id: user.id, user: invalid_params}}
 
           it "return 400" do
             expect(response).to have_http_status(400)
@@ -171,13 +159,11 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
         context "When :lname field too short" do
           let(:invalid_params) do
-            !valid_params[:lname] = "ab"
+            !valid_params[:lname] = short_characters
             valid_params
           end
 
-          before do
-            post :create, params: { user: invalid_params }
-          end
+          before {post :create, params: {user: invalid_params}}
 
           it "return 400" do
             expect(response).to have_http_status(400)
@@ -190,9 +176,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
             valid_params
           end
 
-          before do
-            post :create, params: { user: invalid_params }
-          end
+          before {post :create, params: {user: invalid_params}}
 
           it "return 400" do
             expect(response).to have_http_status(400)
@@ -207,9 +191,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
         valid_params
       end
 
-      before do
-        put :update, params: { id: user.id, user: new_params }
-      end
+      before {put :update, params: {id: user.id, user: new_params}}
 
       it "return 200" do
         expect(response).to have_http_status(200)
@@ -221,7 +203,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     context "When user not found" do
       before do
         allow(User).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
-        delete :destroy, params: { id: user.id }
+        delete :destroy, params: {id: user.id}
       end
 
       it "return 404" do
@@ -230,7 +212,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     end
 
     context "When user deleted successfully" do
-      before { delete :destroy, params: { id: user.id } }
+      before {delete :destroy, params: {id: user.id}}
 
       it "return 200" do
         expect(response).to have_http_status(200)
