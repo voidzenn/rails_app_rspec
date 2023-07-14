@@ -1,15 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::RolesController, type: :controller  do
-  let(:role) { FactoryBot.create(:role) }
-  let(:valid_params) { { name: "Member" } }
+  let(:role) {FactoryBot.create(:role)}
+  let(:valid_params) {{ name: "Member"}}
 
   describe "POST #create" do
     context "When failed in creating role" do
       context "When the name is too short" do
-        let(:invalid_params) { { name: "abc"} }
+        let(:invalid_params) {{name: "abc"}}
 
-        before { post :create, params: { role: invalid_params } }
+        before {post :create, params: {role: invalid_params}}
 
         it "return 400" do
           expect(response).to have_http_status(400)
@@ -18,9 +18,7 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
     end
 
     context "When role saved successfully" do
-      before do
-        post :create, params: { role: valid_params }
-      end
+      before {post :create, params: {role: valid_params}}
 
       it "return 200" do
         expect(response).to have_http_status(200)
@@ -45,7 +43,7 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
     context "When roles data retrieved failed" do
       before do
         allow(Role).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
-        get :show, params: { id: role.id }
+        get :show, params: {id: role.id}
       end
 
       it "return 404" do
@@ -54,9 +52,7 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
     end
 
     context "When roles data retrieved successfully" do
-      before do
-        get :show, params: { id: role.id }
-      end
+      before {get :show, params: {id: role.id}}
 
       it "return 200" do
         expect(response).to have_http_status(200)
@@ -69,7 +65,7 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
       context "When role not found" do
           before do
           allow(Role).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
-          put :update, params: { id: role.id, role: valid_params }
+          put :update, params: {id: role.id, role: valid_params}
         end
 
         it "return 404" do
@@ -84,9 +80,7 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
             valid_params
           end
 
-          before do
-            put :update, params: { id: role.id, role: invalid_params }
-          end
+          before {put :update, params: {id: role.id, role: invalid_params}}
 
           it "return 400" do
             expect(response).to have_http_status(400)
@@ -95,13 +89,11 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
 
         context "When :name is greater than 40" do
           let(:invalid_params) do
-            !valid_params[:name] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            !valid_params[:name] = Faker::Lorem.characters(number: 42)
             valid_params
           end
 
-          before do
-            put :update, params: { id: role.id, role: invalid_params }
-          end
+          before {put :update, params: {id: role.id, role: invalid_params}}
 
           it "return 400" do
             expect(response).to have_http_status(400)
@@ -111,9 +103,7 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
     end
 
     context "When roles data updated successfully" do
-      before do
-        get :update, params: { id: role.id, role: valid_params }
-      end
+      before {get :update, params: {id: role.id, role: valid_params}}
 
       it "return 200" do
         expect(response).to have_http_status(200)
@@ -123,20 +113,20 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
 
   describe "DELETE #destroy" do
     let(:valid_params) do
-          {
-            fname: "new user",
-            lname: "user",
-            role_id: role.id
-          }
-        end
-    let(:user) { User.create(valid_params) }
+      {
+        fname: "new user",
+        lname: "user",
+        role_id: role.id
+      }
+    end
+    let(:user) {User.create(valid_params)}
 
     context "When roles delete failed" do
       context "When role_id foreign_key constraint error mysql" do
         before do
           allow(Role).to receive(:find).and_return(role)
           allow(role).to receive(:destroy!).and_raise(ActiveRecord::InvalidForeignKey)
-          delete :destroy, params: { id: user.role_id }
+          delete :destroy, params: {id: user.role_id}
         end
 
         it "return 422" do
@@ -149,7 +139,7 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
       context "When role has no foreign_key constraint" do
         before do
           User.delete user.id
-          delete :destroy, params: { id: user.role_id }
+          delete :destroy, params: {id: user.role_id}
         end
 
         it "return 200" do
