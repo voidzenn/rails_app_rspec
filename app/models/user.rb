@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_many :posts
   belongs_to :role, foreign_key: :role_id
 
   validates :fname, presence: true, length: { minimum: 3, maximum: 50 }
