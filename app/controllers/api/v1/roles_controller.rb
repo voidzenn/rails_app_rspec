@@ -3,7 +3,6 @@ class Api::V1::RolesController < Api::V1::BaseController
 
   def index
     role ||= Role.all
-
     render json: { message: "Success", data: role }, status: 200
   end
 
@@ -17,7 +16,7 @@ class Api::V1::RolesController < Api::V1::BaseController
     if role.valid? and role.save
       render json: { message: "Successfully created #{params[:name]}", data: role }, status: 200
     else
-      render_invalid_message role
+      invalid_message role
     end
   end
 
@@ -25,7 +24,7 @@ class Api::V1::RolesController < Api::V1::BaseController
     if @role.valid? and @role.update role_params
       render json: { message: "Success" }, status: 200
     else
-      render_invalid_message @role
+      invalid_message @role
     end
   end
 
@@ -44,5 +43,9 @@ class Api::V1::RolesController < Api::V1::BaseController
     @role ||= Role.find params[:id]
   rescue ActiveRecord::RecordNotFound => e
         render json: { message: "Failed role not found", error_message: e }, status: 404
+  end
+
+  def invalid_message data
+    render json: { error_message: data.errors.full_messages }, status: 400
   end
 end

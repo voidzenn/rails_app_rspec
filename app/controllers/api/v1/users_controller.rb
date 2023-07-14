@@ -3,7 +3,6 @@ class Api::V1::UsersController < Api::V1::BaseController
 
   def index
     users ||= User.all
-
     render json: { message: "Success", data: users }, status: 200
   end
 
@@ -21,7 +20,7 @@ class Api::V1::UsersController < Api::V1::BaseController
                   data: user
                 }, status: 200
     else
-      render_invalid_message user
+      invalid_message user
     end
   end
 
@@ -29,7 +28,7 @@ class Api::V1::UsersController < Api::V1::BaseController
     if @user.valid? and @user.update user_params
       render json: { message: "Success", data: @user }, status: 200
     else
-      render_invalid_message @user
+      invalid_message @user
     end
   end
 
@@ -47,5 +46,9 @@ class Api::V1::UsersController < Api::V1::BaseController
     @user ||= User.find params[:id]
   rescue ActiveRecord::RecordNotFound => e
         render json: { message: "Failed user not found", error_message: e }, status: 404
+  end
+
+  def invalid_message data
+    render json: { error_message: data.errors.full_messages }, status: 400
   end
 end
