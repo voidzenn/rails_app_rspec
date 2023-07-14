@@ -13,8 +13,8 @@ RSpec.describe Post, type: :model do
     end
 
     describe "validates length" do
-      let(:short_characters) { "aa" }
-      let(:long_characters) { "aaaaaaaaaaaaaaaaaaaaa" }
+      let(:short_characters) {"aa"}
+      let(:long_characters) {Faker::Lorem.sentences(number: 21)}
 
       describe "#title" do
         context "when value is below minimum" do
