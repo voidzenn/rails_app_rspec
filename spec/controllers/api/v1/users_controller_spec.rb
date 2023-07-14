@@ -15,6 +15,12 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     let(:short_characters) {"ab"}
 
     context "When user create failed" do
+      context "When params is empty" do
+        before {post :create, params: {}}
+
+        it {expect(response).to have_http_status(400)}
+      end
+
       context "When :fname field too short" do
         let(:invalid_params) do
           !valid_params[:fname] = short_characters
@@ -150,7 +156,10 @@ RSpec.describe Api::V1::UsersController, type: :controller do
             valid_params
           end
 
-          before {put :update, params: {id: user.id, user: invalid_params}}
+          before do
+            allow(User).to receive(:find).and_raise(ActionController::BadRequest)
+            put :update, params: {id: user.id, user: invalid_params}
+          end
 
           it "return 400" do
             expect(response).to have_http_status(400)

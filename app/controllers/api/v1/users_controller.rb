@@ -13,23 +13,20 @@ class Api::V1::UsersController < Api::V1::BaseController
   def create
     user ||= User.new user_params
 
-    if user.valid? and user.save
-      render json:
-                {
-                  message: "Successfully created #{user.fname + " " + user.lname}",
-                  data: user
-                }, status: 200
-    else
-      invalid_message user
-    end
+    raise ActionController::BadRequest.new(user.errors.full_messages) unless user.valid?
+
+    user.save
+    render json: {
+      message: "Successfully created #{user.fname + " " + user.lname}",
+      data: user
+    }, status: 200
   end
 
   def update
-    if @user.valid? and @user.update user_params
-      render json: { message: "Success", data: @user }, status: 200
-    else
-      invalid_message @user
-    end
+    raise ActionController::BadRequest.new(@user.errors.full_messages) unless @user.valid?
+
+    @user.update user_params
+    render json: { message: "Success", data: @user }, status: 200
   end
 
   def destroy
@@ -44,11 +41,5 @@ class Api::V1::UsersController < Api::V1::BaseController
 
   def find_by_id
     @user ||= User.find params[:id]
-  rescue ActiveRecord::RecordNotFound => e
-        render json: { message: "Failed user not found", error_message: e }, status: 404
-  end
-
-  def invalid_message data
-    render json: { error_message: data.errors.full_messages }, status: 400
   end
 end
