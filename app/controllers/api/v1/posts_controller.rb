@@ -1,4 +1,4 @@
-class Api::V1::PostsController < ApplicationController
+class Api::V1::PostsController < Api::V1::BaseController
   def index
     posts ||= Post.all
 
@@ -11,7 +11,7 @@ class Api::V1::PostsController < ApplicationController
     if post.save
       render json: { message: "Success saved post", data: post }, status: 200
     else
-      invalid_message post
+      render_invalid_message post
     end
   end
 
@@ -19,9 +19,5 @@ class Api::V1::PostsController < ApplicationController
 
   def post_params
     params.require(:post).permit(:title, :content, :user_id)
-  end
-
-  def invalid_message data
-    render json: { error_message: data.errors.full_messages }, status: 400
   end
 end
