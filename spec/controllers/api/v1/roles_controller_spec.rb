@@ -103,7 +103,7 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
     end
 
     context "When roles data updated successfully" do
-      before {get :update, params: {id: role.id, role: valid_params}}
+      before {put :update, params: {id: role.id, role: valid_params}}
 
       it "return 200" do
         expect(response).to have_http_status(200)
