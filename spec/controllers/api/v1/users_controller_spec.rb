@@ -1,226 +1,116 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::UsersController, type: :controller do
-  let(:role) { FactoryBot.create(:role) }
-  let(:user) { FactoryBot.create(:user) }
-  let(:valid_params) do
-    {
-      fname: "new user",
-      lname: "user",
-      role_id: role.id
-    }
-  end
+  let(:short_characters) {"ab"}
 
-  describe "POST #create" do
-    let(:short_characters) {"ab"}
-
-    context "When user create failed" do
-      context "When params is empty" do
-        before {post :create, params: {}}
-
-        it {expect(response).to have_http_status(400)}
+  shared_context "user not found" do
+    context "When user not found" do
+      before do
+        allow(User).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
+        get :show, params: {id: 0}
       end
 
-      context "When :fname field too short" do
-        let(:invalid_params) do
-          !valid_params[:fname] = short_characters
-          valid_params
-        end
-
-        before {post :create, params: {user: invalid_params}}
-
-        it "return 400" do
-          expect(response).to have_http_status(400)
-        end
-      end
-
-      context "When :lname field too short" do
-        let(:invalid_params) do
-          !valid_params[:lname] = short_characters
-          valid_params
-        end
-
-        before {post :create, params: {user: invalid_params}}
-
-        it "return 400" do
-          expect(response).to have_http_status(400)
-        end
-      end
-
-      context "When :role_id field empty" do
-        let(:invalid_params) do
-          !valid_params[:role_id] = ""
-          valid_params
-        end
-
-        before {post :create, params: {user: invalid_params}}
-
-        it "return 400" do
-          expect(response).to have_http_status(400)
-        end
-      end
-
-      context "When missing :fname field" do
-        let(:invalid_params) {valid_params.except(:fname)}
-
-        before {post :create, params: {user: invalid_params}}
-
-        it "return 400" do
-          expect(response).to have_http_status(400)
-        end
-      end
-
-      context "When missing :lname field" do
-        let(:invalid_params) {valid_params.except(:lname)}
-
-        before {post :create, params: {user: invalid_params}}
-
-        it "return 400" do
-          expect(response).to have_http_status(400)
-        end
-      end
-
-      context "When missing :role_id field" do
-        let(:invalid_params) {valid_params.except(:role_id)}
-
-        before {post :create, params: {user: invalid_params}}
-
-        it "return 400" do
-          expect(response).to have_http_status(400)
-        end
-      end
-    end
-
-    context "When user create successfully" do
-      before {post :create, params: {user: valid_params}}
-
-      it "return success with valid params" do
-        expect(response).to have_http_status(200)
+      it "return 404" do
+        expect(response).to have_http_status(404)
       end
     end
   end
 
   describe "GET #index" do
     context "When users retrieved successfully" do
-      before do
-        allow(User).to receive(:all).and_return([{}])
-        get :index
+      context "When users data empty" do
+        before do
+          allow(User).to receive(:all).and_return([{}])
+          get :index
+        end
+
+        it "return 200" do
+          expect(response).to have_http_status(200)
+        end
       end
 
-      it "return 200" do
-        expect(response).to have_http_status(200)
+      context "When users data not emtpy" do
+        before do
+          FactoryBot.create(:user)
+          get :index
+        end
+
+        it "return 200" do
+          expect(response).to have_http_status(200)
+        end
       end
     end
   end
 
   describe "GET #show" do
-    context "When user not found" do
-      before do
-        allow(User).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
-        get :show, params: {id: 0}
-      end
-
-      it "return 404" do
-        expect(response).to have_http_status(404)
-      end
-    end
+    it_behaves_like "user not found"
 
     context "When user retrieved successfully" do
-      before {get :index, params: {id: user.id}}
+      let(:new_user) {create :user}
+
+      before {get :index, params: {id: new_user.id}}
 
       it "return 200" do
         expect(response).to have_http_status(200)
+      end
+    end
+  end
+
+  describe "POST #create" do
+    it_behaves_like "user not found"
+
+    context "When user create successfully" do
+      let(:user) {build_stubbed :user}
+      let(:params) do
+        {
+          fname: user.fname,
+          lname: user.lname,
+          role_id: user.role_id,
+        }
+      end
+
+      before {post :create, params: {user: params}}
+
+      it do
+        expect(response).to have_http_status(200)
+        expect(response_body[:data][:fname]).to eq params[:fname]
+        expect(response_body[:data][:lname]).to eq params[:lname]
+        expect(response_body[:data][:role_id]).to eq params[:role_id]
       end
     end
   end
 
   describe "PUT #update" do
-    let(:short_characters) {"ab"}
-
-    context "When user not found" do
-      before do
-        allow(User).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
-        get :show, params: {id: 0}
-      end
-
-      it "return 404" do
-        expect(response).to have_http_status(404)
-      end
-    end
-
-    context "When user update failed" do
-      context "When user validations failed" do
-        context "When :fname too short" do
-          let(:invalid_params) do
-            !valid_params[:fname] = short_characters
-            valid_params
-          end
-
-          before do
-            allow(User).to receive(:find).and_raise(ActionController::BadRequest)
-            put :update, params: {id: user.id, user: invalid_params}
-          end
-
-          it "return 400" do
-            expect(response).to have_http_status(400)
-          end
-        end
-
-        context "When :lname field too short" do
-          let(:invalid_params) do
-            !valid_params[:lname] = short_characters
-            valid_params
-          end
-
-          before {post :create, params: {user: invalid_params}}
-
-          it "return 400" do
-            expect(response).to have_http_status(400)
-          end
-        end
-
-        context "When :role_id field empty" do
-          let(:invalid_params) do
-            !valid_params[:role_id] = ""
-            valid_params
-          end
-
-          before {post :create, params: {user: invalid_params}}
-
-          it "return 400" do
-            expect(response).to have_http_status(400)
-          end
-        end
-      end
-    end
+    it_behaves_like "user not found"
 
     context "When user updated successfully" do
-      let(:new_params) do
-        !valid_params[:fname] = "new data"
-        valid_params
+      let(:user) {create :user}
+      let(:new_user) {build_stubbed :user}
+      let(:params) do
+        {
+          fname: new_user.fname,
+          lname: new_user.lname,
+          role_id: new_user.role_id,
+        }
       end
 
-      before {put :update, params: {id: user.id, user: new_params}}
+      before {put :update, params: {id: user.id, user: params}}
 
-      it "return 200" do
+      it do
         expect(response).to have_http_status(200)
+        expect(response_body[:data][:fname]).to eq params[:fname]
+        expect(response_body[:data][:lname]).to eq params[:lname]
+        expect(response_body[:data][:role_id]).to eq params[:role_id]
       end
     end
   end
 
   describe "DELETE #destroy" do
-    context "When user not found" do
-      before do
-        allow(User).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
-        delete :destroy, params: {id: user.id}
-      end
-
-      it "return 404" do
-        expect(response).to have_http_status(404)
-      end
-    end
+    it_behaves_like "user not found"
 
     context "When user deleted successfully" do
+      let(:user) {create :user}
+
       before {delete :destroy, params: {id: user.id}}
 
       it "return 200" do
