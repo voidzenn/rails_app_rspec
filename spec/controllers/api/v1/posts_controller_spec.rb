@@ -1,15 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::PostsController, type: :controller do
-  shared_context "post not found" do
-    before do
-      allow(Post).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
-      get :show, params: {id: 0}
-    end
-
-    it {expect(response).to have_http_status(:not_found)}
-  end
-
   describe "GET #index" do
     context "when posts data retrieved successfully" do
       before {get :index, params: {}}
@@ -19,7 +10,18 @@ RSpec.describe Api::V1::PostsController, type: :controller do
   end
 
   describe "GET #show" do
-    it_behaves_like "post not found"
+    context "when post not found" do
+      let(:role) {create :role}
+
+      before do
+        allow(Post).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
+        get :show, params: {id: role.id}
+      end
+
+      it do
+        expect(response).to have_http_status(404)
+      end
+    end
 
     context "when posts retrieved successfully" do
       let(:new_post) {create :post}
@@ -68,7 +70,18 @@ RSpec.describe Api::V1::PostsController, type: :controller do
 
   describe "PUT #update" do
     context "when post update failed" do
-      it_behaves_like "post not found"
+      context "when post not found" do
+        let(:role) {create :role}
+
+        before do
+          allow(Post).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
+          put :update, params: {id: role.id}
+        end
+
+        it do
+          expect(response).to have_http_status(404)
+        end
+      end
     end
 
     context "when post update successfully" do
@@ -90,7 +103,18 @@ RSpec.describe Api::V1::PostsController, type: :controller do
 
   describe "DELETE #destroy" do
     context "when post delete failed" do
-      it_behaves_like "post not found"
+      context "when post not found" do
+        let(:role) {create :role}
+
+        before do
+          allow(Post).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
+          delete :destroy, params: {id: role.id}
+        end
+
+        it do
+          expect(response).to have_http_status(404)
+        end
+      end
     end
 
     context "when post delete successfully" do
