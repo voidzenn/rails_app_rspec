@@ -3,19 +3,6 @@ require 'rails_helper'
 RSpec.describe Api::V1::UsersController, type: :controller do
   let(:short_characters) {"ab"}
 
-  shared_context "user not found" do
-    context "when user not found" do
-      before do
-        allow(User).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
-        get :show, params: {id: 0}
-      end
-
-      it "return 404" do
-        expect(response).to have_http_status(404)
-      end
-    end
-  end
-
   describe "GET #index" do
     context "when users retrieved successfully" do
       context "when users data empty" do
@@ -43,7 +30,16 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   end
 
   describe "GET #show" do
-    it_behaves_like "user not found"
+    context "when user not found" do
+      before do
+        allow(User).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
+        get :show, params: {id: 0}
+      end
+
+      it "return 404" do
+        expect(response).to have_http_status(404)
+      end
+    end
 
     context "when user retrieved successfully" do
       let(:new_user) {create :user}
@@ -57,8 +53,6 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   end
 
   describe "POST #create" do
-    it_behaves_like "user not found"
-
     context "when user create successfully" do
       let(:user) {build_stubbed :user}
       let(:params) do
@@ -81,7 +75,16 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   end
 
   describe "PUT #update" do
-    it_behaves_like "user not found"
+    context "when user not found" do
+      before do
+        allow(User).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
+        put :update, params: {id: 0}
+      end
+
+      it "return 404" do
+        expect(response).to have_http_status(404)
+      end
+    end
 
     context "when user updated successfully" do
       let(:user) {create :user}
@@ -106,7 +109,16 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   end
 
   describe "DELETE #destroy" do
-    it_behaves_like "user not found"
+    context "when user not found" do
+      before do
+        allow(User).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
+        delete :destroy, params: {id: 0}
+      end
+
+      it "return 404" do
+        expect(response).to have_http_status(404)
+      end
+    end
 
     context "when user deleted successfully" do
       let(:user) {create :user}
