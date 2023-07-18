@@ -11,7 +11,7 @@ RSpec.describe Api::V1::PostsController, type: :controller do
   end
 
   describe "GET #index" do
-    context "When posts data retrieved successfully" do
+    context "when posts data retrieved successfully" do
       before {get :index, params: {}}
 
       it {expect(response).to have_http_status(200)}
@@ -21,7 +21,7 @@ RSpec.describe Api::V1::PostsController, type: :controller do
   describe "GET #show" do
     it_behaves_like "post not found"
 
-    context "When posts retrieved successfully" do
+    context "when posts retrieved successfully" do
       let(:new_post) {create :post}
 
       before {get :show, params: {id: new_post.id}}
@@ -35,8 +35,8 @@ RSpec.describe Api::V1::PostsController, type: :controller do
   end
 
   describe "POST #create" do
-    context "When post failed to save" do
-      context "When params empty" do
+    context "when post failed to save" do
+      context "when params empty" do
         before {post :create, params: {}}
 
         it "return 400" do
@@ -45,7 +45,7 @@ RSpec.describe Api::V1::PostsController, type: :controller do
       end
     end
 
-    context "When post successfully saved" do
+    context "when post successfully saved" do
       let(:user) {create :user}
       let(:params) do
         {
@@ -67,12 +67,12 @@ RSpec.describe Api::V1::PostsController, type: :controller do
   end
 
   describe "PUT #update" do
-    context "When post update failed" do
+    context "when post update failed" do
       it_behaves_like "post not found"
     end
 
-    context "When post update successfully" do
-      context "When post parmas is satisfied" do
+    context "when post update successfully" do
+      context "when post parmas is satisfied" do
         let(:new_post) {create :post}
         let(:params) do
           {
@@ -89,11 +89,11 @@ RSpec.describe Api::V1::PostsController, type: :controller do
   end
 
   describe "DELETE #destroy" do
-    context "When post delete failed" do
+    context "when post delete failed" do
       it_behaves_like "post not found"
     end
 
-    context "When post delete successfully" do
+    context "when post delete successfully" do
       let(:new_post) {create :post}
 
       before {delete :destroy, params: {id: new_post.id}}

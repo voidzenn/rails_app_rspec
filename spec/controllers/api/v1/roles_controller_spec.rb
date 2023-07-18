@@ -5,8 +5,8 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
   let(:valid_params) {{ name: "Member"}}
 
   describe "POST #create" do
-    context "When failed in creating role" do
-      context "When the name is too short" do
+    context "when failed in creating role" do
+      context "when the name is too short" do
         let(:invalid_params) {{name: "abc"}}
 
         before {post :create, params: {role: invalid_params}}
@@ -17,7 +17,7 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
       end
     end
 
-    context "When role saved successfully" do
+    context "when role saved successfully" do
       before {post :create, params: {role: valid_params}}
 
       it "return 200" do
@@ -27,7 +27,7 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
   end
 
   describe "GET #index" do
-    context "When roles data retrieved successfully" do
+    context "when roles data retrieved successfully" do
       before do
         allow(Role).to receive(:all).and_return([{}])
         get :index
@@ -40,7 +40,7 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
   end
 
   describe "GET #show" do
-    context "When roles data retrieved failed" do
+    context "when roles data retrieved failed" do
       before do
         allow(Role).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
         get :show, params: {id: role.id}
@@ -51,7 +51,7 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
       end
     end
 
-    context "When roles data retrieved successfully" do
+    context "when roles data retrieved successfully" do
       before {get :show, params: {id: role.id}}
 
       it "return 200" do
@@ -61,7 +61,7 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
   end
 
   describe "PUT #update" do
-    context "When roles data update failed" do
+    context "when roles data update failed" do
       context "When role not found" do
           before do
           allow(Role).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
@@ -73,7 +73,7 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
         end
       end
 
-      context "When user validations fail" do
+      context "when user validations fail" do
         context "When :name is less than 3" do
           let(:invalid_params) do
             !valid_params[:name] = "a"
@@ -87,7 +87,7 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
           end
         end
 
-        context "When :name is greater than 40" do
+        context "when :name is greater than 40" do
           let(:invalid_params) do
             !valid_params[:name] = Faker::Lorem.characters(number: 42)
             valid_params
@@ -102,7 +102,7 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
       end
     end
 
-    context "When roles data updated successfully" do
+    context "when roles data updated successfully" do
       before {put :update, params: {id: role.id, role: valid_params}}
 
       it "return 200" do
@@ -121,8 +121,8 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
     end
     let(:user) {User.create(valid_params)}
 
-    context "When roles delete failed" do
-      context "When role_id foreign_key constraint error mysql" do
+    context "when roles delete failed" do
+      context "when role_id foreign_key constraint error mysql" do
         before do
           allow(Role).to receive(:find).and_return(role)
           allow(role).to receive(:destroy!).and_raise(ActiveRecord::InvalidForeignKey)
@@ -135,8 +135,8 @@ RSpec.describe Api::V1::RolesController, type: :controller  do
       end
     end
 
-    context "When roles delete successfully" do
-      context "When role has no foreign_key constraint" do
+    context "when roles delete successfully" do
+      context "when role has no foreign_key constraint" do
         before do
           User.delete user.id
           delete :destroy, params: {id: user.role_id}

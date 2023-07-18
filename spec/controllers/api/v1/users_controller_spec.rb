@@ -4,7 +4,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   let(:short_characters) {"ab"}
 
   shared_context "user not found" do
-    context "When user not found" do
+    context "when user not found" do
       before do
         allow(User).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
         get :show, params: {id: 0}
@@ -17,8 +17,8 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   end
 
   describe "GET #index" do
-    context "When users retrieved successfully" do
-      context "When users data empty" do
+    context "when users retrieved successfully" do
+      context "when users data empty" do
         before do
           allow(User).to receive(:all).and_return([{}])
           get :index
@@ -29,7 +29,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
         end
       end
 
-      context "When users data not emtpy" do
+      context "when users data not emtpy" do
         before do
           FactoryBot.create(:user)
           get :index
@@ -45,7 +45,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   describe "GET #show" do
     it_behaves_like "user not found"
 
-    context "When user retrieved successfully" do
+    context "when user retrieved successfully" do
       let(:new_user) {create :user}
 
       before {get :index, params: {id: new_user.id}}
@@ -59,7 +59,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   describe "POST #create" do
     it_behaves_like "user not found"
 
-    context "When user create successfully" do
+    context "when user create successfully" do
       let(:user) {build_stubbed :user}
       let(:params) do
         {
@@ -83,7 +83,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   describe "PUT #update" do
     it_behaves_like "user not found"
 
-    context "When user updated successfully" do
+    context "when user updated successfully" do
       let(:user) {create :user}
       let(:new_user) {build_stubbed :user}
       let(:params) do
@@ -108,7 +108,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   describe "DELETE #destroy" do
     it_behaves_like "user not found"
 
-    context "When user deleted successfully" do
+    context "when user deleted successfully" do
       let(:user) {create :user}
 
       before {delete :destroy, params: {id: user.id}}
