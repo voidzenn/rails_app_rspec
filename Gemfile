@@ -20,6 +20,8 @@ group :development, :test do
   gem "figaro"
   gem "factory_bot_rails"
   gem "faker"
+  gem "shoulda-matchers"
+  gem "rspec-rails"
 end
 
 group :development do
@@ -30,6 +32,4 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   gem "webdrivers"
-  gem "shoulda-matchers", require: false
-  gem "rspec-rails"
 end
