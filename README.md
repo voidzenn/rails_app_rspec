@@ -9,27 +9,27 @@
 ## Model Specs
 #### User
  ~~~ ruby
- rspec spec/models/user_spec.rb
+ bundle exec rspec spec/models/user_spec.rb
  ~~~
 #### Role
  ~~~ ruby
- rspec spec/models/role_spec.rb
+ bundle exec rspec spec/models/role_spec.rb
  ~~~
 #### Post
  ~~~ ruby
- rspec spec/models/post_spec.rb
+ bundle exec rspec spec/models/post_spec.rb
  ~~~
  ## Controller Specs
  
 #### Roles
   ~~~ ruby 
- rspec spec/controllers/api/v1/roles_controller_spec.rb
+ bundle exec rspec spec/controllers/api/v1/roles_controller_spec.rb
  ~~~
 #### Users
   ~~~ ruby 
- rspec spec/controllers/api/v1/users_controller_spec.rb
+ bundle exec rspec spec/controllers/api/v1/users_controller_spec.rb
  ~~~
 #### Posts
   ~~~ ruby 
- rspec spec/controllers/api/v1/posts_controller_spec.rb
+ bundle exec rspec spec/controllers/api/v1/posts_controller_spec.rb
  ~~~
